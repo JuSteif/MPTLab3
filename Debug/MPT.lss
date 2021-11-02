@@ -1,0 +1,212 @@
+
+MPT.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000130  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  000001a4  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000002  00800060  00800060  000001a4  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  000001a4  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001d4  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000058  00000000  00000000  00000210  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   0000015e  00000000  00000000  00000268  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 000000a8  00000000  00000000  000003c6  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000133  00000000  00000000  0000046e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  000000f8  00000000  00000000  000005a4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    0000019f  00000000  00000000  0000069c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    000001a9  00000000  00000000  0000083b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000038  00000000  00000000  000009e4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   8:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  10:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  14:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  18:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  24:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  28:	0c 94 7f 00 	jmp	0xfe	; 0xfe <__vector_10>
+  2c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__vector_11>
+  30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  38:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  3c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  40:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  44:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  48:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  4c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  50:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_clear_bss>:
+  60:	20 e0       	ldi	r18, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	01 c0       	rjmp	.+2      	; 0x6a <.do_clear_bss_start>
+
+00000068 <.do_clear_bss_loop>:
+  68:	1d 92       	st	X+, r1
+
+0000006a <.do_clear_bss_start>:
+  6a:	a2 36       	cpi	r26, 0x62	; 98
+  6c:	b2 07       	cpc	r27, r18
+  6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
+  70:	0e 94 91 00 	call	0x122	; 0x122 <main>
+  74:	0c 94 96 00 	jmp	0x12c	; 0x12c <_exit>
+
+00000078 <__bad_interrupt>:
+  78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000007c <__vector_11>:
+// ISR: Schlüsselwort für Compiler, dass dies eine ISR ist
+// TIMER0_OVF_vect: Information an den Compiler, mit welchem Interrupt
+//                  diese ISR verknüpft werden soll. Der Bezeichner "TIMER0_OVF_vect"
+//                  ist wie alle anderen ISR-Bezeichner in "avr/interrupt.h" definiert.
+ISR(TIMER0_OVF_vect)
+{
+  7c:	1f 92       	push	r1
+  7e:	0f 92       	push	r0
+  80:	00 90 5f 00 	lds	r0, 0x005F
+  84:	0f 92       	push	r0
+  86:	11 24       	eor	r1, r1
+  88:	2f 93       	push	r18
+  8a:	3f 93       	push	r19
+  8c:	8f 93       	push	r24
+  8e:	9f 93       	push	r25
+  90:	ef 93       	push	r30
+  92:	ff 93       	push	r31
+  94:	cf 93       	push	r28
+  96:	df 93       	push	r29
+  98:	cd b7       	in	r28, 0x3d	; 61
+  9a:	de b7       	in	r29, 0x3e	; 62
+  // Zählerstandsregister reinitialisieren
+  TCNT0 = 256-250;
+  9c:	82 e5       	ldi	r24, 0x52	; 82
+  9e:	90 e0       	ldi	r25, 0x00	; 0
+  a0:	26 e0       	ldi	r18, 0x06	; 6
+  a2:	fc 01       	movw	r30, r24
+  a4:	20 83       	st	Z, r18
+
+  // Überlaufzähler inkrementieren
+  OvCnt++;
+  a6:	80 91 60 00 	lds	r24, 0x0060
+  aa:	90 91 61 00 	lds	r25, 0x0061
+  ae:	01 96       	adiw	r24, 0x01	; 1
+  b0:	90 93 61 00 	sts	0x0061, r25
+  b4:	80 93 60 00 	sts	0x0060, r24
+  // Nach 100 Überläufen = 100ms
+  if (OvCnt == 2000)
+  b8:	80 91 60 00 	lds	r24, 0x0060
+  bc:	90 91 61 00 	lds	r25, 0x0061
+  c0:	80 3d       	cpi	r24, 0xD0	; 208
+  c2:	97 40       	sbci	r25, 0x07	; 7
+  c4:	71 f4       	brne	.+28     	; 0xe2 <__vector_11+0x66>
+  {
+	  // Überlaufzähler zurücksetzen
+	  OvCnt = 0;
+  c6:	10 92 61 00 	sts	0x0061, r1
+  ca:	10 92 60 00 	sts	0x0060, r1
+	  
+	  // LED toggeln
+    TGL_BIT(LED_PORT,LED_0);
+  ce:	85 e3       	ldi	r24, 0x35	; 53
+  d0:	90 e0       	ldi	r25, 0x00	; 0
+  d2:	25 e3       	ldi	r18, 0x35	; 53
+  d4:	30 e0       	ldi	r19, 0x00	; 0
+  d6:	f9 01       	movw	r30, r18
+  d8:	30 81       	ld	r19, Z
+  da:	21 e0       	ldi	r18, 0x01	; 1
+  dc:	23 27       	eor	r18, r19
+  de:	fc 01       	movw	r30, r24
+  e0:	20 83       	st	Z, r18
+  }	
+}	
+  e2:	df 91       	pop	r29
+  e4:	cf 91       	pop	r28
+  e6:	ff 91       	pop	r31
+  e8:	ef 91       	pop	r30
+  ea:	9f 91       	pop	r25
+  ec:	8f 91       	pop	r24
+  ee:	3f 91       	pop	r19
+  f0:	2f 91       	pop	r18
+  f2:	0f 90       	pop	r0
+  f4:	00 92 5f 00 	sts	0x005F, r0
+  f8:	0f 90       	pop	r0
+  fa:	1f 90       	pop	r1
+  fc:	18 95       	reti
+
+000000fe <__vector_10>:
+// ISR: Schlüsselwort für Compiler, dass dies eine ISR ist
+// TIMER0_COMP_vect: Information an den Compiler, mit welchem Interrupt
+//                   diese ISR verknüpft werden soll. Der Bezeichner "TIMER0_COMP_vect"
+//                   ist wie alle anderen ISR-Bezeichner in "avr/interrupt.h" definiert.
+ISR(TIMER0_COMP_vect)
+{
+  fe:	1f 92       	push	r1
+ 100:	0f 92       	push	r0
+ 102:	00 90 5f 00 	lds	r0, 0x005F
+ 106:	0f 92       	push	r0
+ 108:	11 24       	eor	r1, r1
+ 10a:	cf 93       	push	r28
+ 10c:	df 93       	push	r29
+ 10e:	cd b7       	in	r28, 0x3d	; 61
+ 110:	de b7       	in	r29, 0x3e	; 62
+  // IHR_CODE_HIER ...
+}	
+ 112:	df 91       	pop	r29
+ 114:	cf 91       	pop	r28
+ 116:	0f 90       	pop	r0
+ 118:	00 92 5f 00 	sts	0x005F, r0
+ 11c:	0f 90       	pop	r0
+ 11e:	1f 90       	pop	r1
+ 120:	18 95       	reti
+
+00000122 <main>:
+#include "Labor_3/MPT_LAB_3_3.h"
+#include "Labor_3/MPT_LAB_3_4.h"
+
+
+int main(void)
+{	
+ 122:	cf 93       	push	r28
+ 124:	df 93       	push	r29
+ 126:	cd b7       	in	r28, 0x3d	; 61
+ 128:	de b7       	in	r29, 0x3e	; 62
+
+
+  while(1)
+  {
+      //TODO:: Please write your application code 
+  }
+ 12a:	ff cf       	rjmp	.-2      	; 0x12a <main+0x8>
+
+0000012c <_exit>:
+ 12c:	f8 94       	cli
+
+0000012e <__stop_program>:
+ 12e:	ff cf       	rjmp	.-2      	; 0x12e <__stop_program>
