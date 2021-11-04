@@ -3,31 +3,31 @@ MPT.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000212  00000000  00000000  00000074  2**1
+  0 .text         000001ec  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  00000286  2**0
+  1 .data         00000000  00800060  00800060  00000260  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000002  00800060  00800060  00000286  2**0
+  2 .bss          00000002  00800060  00800060  00000260  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000286  2**0
+  3 .comment      00000030  00000000  00000000  00000260  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000002b8  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000290  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 000000a8  00000000  00000000  000002f4  2**0
+  5 .debug_aranges 00000058  00000000  00000000  000002cc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000002e9  00000000  00000000  0000039c  2**0
+  6 .debug_info   0000015e  00000000  00000000  00000324  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000149  00000000  00000000  00000685  2**0
+  7 .debug_abbrev 000000a8  00000000  00000000  00000482  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000004ae  00000000  00000000  000007ce  2**0
+  8 .debug_line   000001e8  00000000  00000000  0000052a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000001ec  00000000  00000000  00000c7c  2**2
+  9 .debug_frame  00000118  00000000  00000000  00000714  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000210  00000000  00000000  00000e68  2**0
+ 10 .debug_str    000001a5  00000000  00000000  0000082c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000387  00000000  00000000  00001078  2**0
+ 11 .debug_loc    000001f7  00000000  00000000  000009d1  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000078  00000000  00000000  000013ff  2**0
+ 12 .debug_ranges 00000038  00000000  00000000  00000bc8  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -43,8 +43,8 @@ Disassembly of section .text:
   1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
   20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
   24:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
-  28:	0c 94 ed 00 	jmp	0x1da	; 0x1da <__vector_10>
-  2c:	0c 94 ab 00 	jmp	0x156	; 0x156 <__vector_11>
+  28:	0c 94 80 00 	jmp	0x100	; 0x100 <__vector_10>
+  2c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__vector_11>
   30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
   34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
   38:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
@@ -76,278 +76,243 @@ Disassembly of section .text:
   6a:	a2 36       	cpi	r26, 0x62	; 98
   6c:	b2 07       	cpc	r27, r18
   6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
-  70:	0e 94 00 01 	call	0x200	; 0x200 <main>
-  74:	0c 94 07 01 	jmp	0x20e	; 0x20e <_exit>
+  70:	0e 94 ed 00 	call	0x1da	; 0x1da <main>
+  74:	0c 94 f4 00 	jmp	0x1e8	; 0x1e8 <_exit>
 
 00000078 <__bad_interrupt>:
   78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
-0000007c <WaitTimer0_x_ms>:
-	LED_PORT = 0xff;
+0000007c <__vector_11>:
+	sei();
 	
-	while(1){
-		TGL_BIT(LED_PORT, 0);
-		WaitTimer0_x_10ms(25);
+	while (1)
+	{
+		// nichts mehr zu tun ... vorerst
 	}
-  7c:	cf 93       	push	r28
-  7e:	df 93       	push	r29
-  80:	00 d0       	rcall	.+0      	; 0x82 <WaitTimer0_x_ms+0x6>
-  82:	1f 92       	push	r1
-  84:	cd b7       	in	r28, 0x3d	; 61
-  86:	de b7       	in	r29, 0x3e	; 62
-  88:	9b 83       	std	Y+3, r25	; 0x03
-  8a:	8a 83       	std	Y+2, r24	; 0x02
-  8c:	83 e5       	ldi	r24, 0x53	; 83
-  8e:	90 e0       	ldi	r25, 0x00	; 0
-  90:	23 e5       	ldi	r18, 0x53	; 83
-  92:	30 e0       	ldi	r19, 0x00	; 0
-  94:	f9 01       	movw	r30, r18
-  96:	20 81       	ld	r18, Z
-  98:	23 60       	ori	r18, 0x03	; 3
-  9a:	fc 01       	movw	r30, r24
-  9c:	20 83       	st	Z, r18
-  9e:	82 e5       	ldi	r24, 0x52	; 82
-  a0:	90 e0       	ldi	r25, 0x00	; 0
-  a2:	26 e0       	ldi	r18, 0x06	; 6
-  a4:	fc 01       	movw	r30, r24
-  a6:	20 83       	st	Z, r18
-  a8:	8c e5       	ldi	r24, 0x5C	; 92
-  aa:	90 e0       	ldi	r25, 0x00	; 0
-  ac:	fc 01       	movw	r30, r24
-  ae:	10 82       	st	Z, r1
-  b0:	89 e5       	ldi	r24, 0x59	; 89
-  b2:	90 e0       	ldi	r25, 0x00	; 0
-  b4:	fc 01       	movw	r30, r24
-  b6:	10 82       	st	Z, r1
-  b8:	19 82       	std	Y+1, r1	; 0x01
-  ba:	8a 81       	ldd	r24, Y+2	; 0x02
-  bc:	9b 81       	ldd	r25, Y+3	; 0x03
-  be:	89 2b       	or	r24, r25
-  c0:	21 f1       	breq	.+72     	; 0x10a <WaitTimer0_x_ms+0x8e>
-  c2:	88 e5       	ldi	r24, 0x58	; 88
-  c4:	90 e0       	ldi	r25, 0x00	; 0
-  c6:	fc 01       	movw	r30, r24
-  c8:	80 81       	ld	r24, Z
-  ca:	88 2f       	mov	r24, r24
-  cc:	90 e0       	ldi	r25, 0x00	; 0
-  ce:	81 70       	andi	r24, 0x01	; 1
-  d0:	99 27       	eor	r25, r25
-  d2:	89 2b       	or	r24, r25
-  d4:	b1 f3       	breq	.-20     	; 0xc2 <WaitTimer0_x_ms+0x46>
-  d6:	88 e5       	ldi	r24, 0x58	; 88
-  d8:	90 e0       	ldi	r25, 0x00	; 0
-  da:	28 e5       	ldi	r18, 0x58	; 88
-  dc:	30 e0       	ldi	r19, 0x00	; 0
-  de:	f9 01       	movw	r30, r18
-  e0:	20 81       	ld	r18, Z
-  e2:	21 60       	ori	r18, 0x01	; 1
-  e4:	fc 01       	movw	r30, r24
-  e6:	20 83       	st	Z, r18
-  e8:	89 81       	ldd	r24, Y+1	; 0x01
-  ea:	8f 5f       	subi	r24, 0xFF	; 255
-  ec:	89 83       	std	Y+1, r24	; 0x01
-  ee:	82 e5       	ldi	r24, 0x52	; 82
-  f0:	90 e0       	ldi	r25, 0x00	; 0
-  f2:	26 e0       	ldi	r18, 0x06	; 6
-  f4:	fc 01       	movw	r30, r24
-  f6:	20 83       	st	Z, r18
-  f8:	89 81       	ldd	r24, Y+1	; 0x01
-  fa:	28 2f       	mov	r18, r24
-  fc:	30 e0       	ldi	r19, 0x00	; 0
-  fe:	8a 81       	ldd	r24, Y+2	; 0x02
- 100:	9b 81       	ldd	r25, Y+3	; 0x03
- 102:	28 17       	cp	r18, r24
- 104:	39 07       	cpc	r19, r25
- 106:	18 f4       	brcc	.+6      	; 0x10e <WaitTimer0_x_ms+0x92>
- 108:	dc cf       	rjmp	.-72     	; 0xc2 <WaitTimer0_x_ms+0x46>
- 10a:	00 00       	nop
- 10c:	01 c0       	rjmp	.+2      	; 0x110 <WaitTimer0_x_ms+0x94>
- 10e:	00 00       	nop
- 110:	0f 90       	pop	r0
- 112:	0f 90       	pop	r0
- 114:	0f 90       	pop	r0
- 116:	df 91       	pop	r29
- 118:	cf 91       	pop	r28
- 11a:	08 95       	ret
+  7c:	1f 92       	push	r1
+  7e:	0f 92       	push	r0
+  80:	00 90 5f 00 	lds	r0, 0x005F	; 0x80005f <__TEXT_REGION_LENGTH__+0x7e005f>
+  84:	0f 92       	push	r0
+  86:	11 24       	eor	r1, r1
+  88:	2f 93       	push	r18
+  8a:	3f 93       	push	r19
+  8c:	8f 93       	push	r24
+  8e:	9f 93       	push	r25
+  90:	ef 93       	push	r30
+  92:	ff 93       	push	r31
+  94:	cf 93       	push	r28
+  96:	df 93       	push	r29
+  98:	cd b7       	in	r28, 0x3d	; 61
+  9a:	de b7       	in	r29, 0x3e	; 62
+  9c:	82 e5       	ldi	r24, 0x52	; 82
+  9e:	90 e0       	ldi	r25, 0x00	; 0
+  a0:	26 e0       	ldi	r18, 0x06	; 6
+  a2:	fc 01       	movw	r30, r24
+  a4:	20 83       	st	Z, r18
+  a6:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <_edata>
+  aa:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <_edata+0x1>
+  ae:	01 96       	adiw	r24, 0x01	; 1
+  b0:	90 93 61 00 	sts	0x0061, r25	; 0x800061 <_edata+0x1>
+  b4:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <_edata>
+  b8:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <_edata>
+  bc:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <_edata+0x1>
+  c0:	80 3d       	cpi	r24, 0xD0	; 208
+  c2:	97 40       	sbci	r25, 0x07	; 7
+  c4:	71 f4       	brne	.+28     	; 0xe2 <__vector_11+0x66>
+  c6:	10 92 61 00 	sts	0x0061, r1	; 0x800061 <_edata+0x1>
+  ca:	10 92 60 00 	sts	0x0060, r1	; 0x800060 <_edata>
+  ce:	85 e3       	ldi	r24, 0x35	; 53
+  d0:	90 e0       	ldi	r25, 0x00	; 0
+  d2:	25 e3       	ldi	r18, 0x35	; 53
+  d4:	30 e0       	ldi	r19, 0x00	; 0
+  d6:	f9 01       	movw	r30, r18
+  d8:	30 81       	ld	r19, Z
+  da:	21 e0       	ldi	r18, 0x01	; 1
+  dc:	23 27       	eor	r18, r19
+  de:	fc 01       	movw	r30, r24
+  e0:	20 83       	st	Z, r18
+  e2:	00 00       	nop
+  e4:	df 91       	pop	r29
+  e6:	cf 91       	pop	r28
+  e8:	ff 91       	pop	r31
+  ea:	ef 91       	pop	r30
+  ec:	9f 91       	pop	r25
+  ee:	8f 91       	pop	r24
+  f0:	3f 91       	pop	r19
+  f2:	2f 91       	pop	r18
+  f4:	0f 90       	pop	r0
+  f6:	00 92 5f 00 	sts	0x005F, r0	; 0x80005f <__TEXT_REGION_LENGTH__+0x7e005f>
+  fa:	0f 90       	pop	r0
+  fc:	1f 90       	pop	r1
+  fe:	18 95       	reti
 
-0000011c <A_3_1_5>:
+00000100 <__vector_10>:
+ 100:	1f 92       	push	r1
+ 102:	0f 92       	push	r0
+ 104:	00 90 5f 00 	lds	r0, 0x005F	; 0x80005f <__TEXT_REGION_LENGTH__+0x7e005f>
+ 108:	0f 92       	push	r0
+ 10a:	11 24       	eor	r1, r1
+ 10c:	2f 93       	push	r18
+ 10e:	3f 93       	push	r19
+ 110:	8f 93       	push	r24
+ 112:	9f 93       	push	r25
+ 114:	ef 93       	push	r30
+ 116:	ff 93       	push	r31
+ 118:	cf 93       	push	r28
+ 11a:	df 93       	push	r29
+ 11c:	cd b7       	in	r28, 0x3d	; 61
+ 11e:	de b7       	in	r29, 0x3e	; 62
+ 120:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <_edata>
+ 124:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <_edata+0x1>
+ 128:	01 96       	adiw	r24, 0x01	; 1
+ 12a:	90 93 61 00 	sts	0x0061, r25	; 0x800061 <_edata+0x1>
+ 12e:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <_edata>
+ 132:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <_edata>
+ 136:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <_edata+0x1>
+ 13a:	80 3d       	cpi	r24, 0xD0	; 208
+ 13c:	97 40       	sbci	r25, 0x07	; 7
+ 13e:	99 f4       	brne	.+38     	; 0x166 <__vector_10+0x66>
+ 140:	10 92 61 00 	sts	0x0061, r1	; 0x800061 <_edata+0x1>
+ 144:	10 92 60 00 	sts	0x0060, r1	; 0x800060 <_edata>
+ 148:	85 e3       	ldi	r24, 0x35	; 53
+ 14a:	90 e0       	ldi	r25, 0x00	; 0
+ 14c:	25 e3       	ldi	r18, 0x35	; 53
+ 14e:	30 e0       	ldi	r19, 0x00	; 0
+ 150:	f9 01       	movw	r30, r18
+ 152:	30 81       	ld	r19, Z
+ 154:	21 e0       	ldi	r18, 0x01	; 1
+ 156:	23 27       	eor	r18, r19
+ 158:	fc 01       	movw	r30, r24
+ 15a:	20 83       	st	Z, r18
+ 15c:	8c e5       	ldi	r24, 0x5C	; 92
+ 15e:	90 e0       	ldi	r25, 0x00	; 0
+ 160:	2a ef       	ldi	r18, 0xFA	; 250
+ 162:	fc 01       	movw	r30, r24
+ 164:	20 83       	st	Z, r18
+ 166:	00 00       	nop
+ 168:	df 91       	pop	r29
+ 16a:	cf 91       	pop	r28
+ 16c:	ff 91       	pop	r31
+ 16e:	ef 91       	pop	r30
+ 170:	9f 91       	pop	r25
+ 172:	8f 91       	pop	r24
+ 174:	3f 91       	pop	r19
+ 176:	2f 91       	pop	r18
+ 178:	0f 90       	pop	r0
+ 17a:	00 92 5f 00 	sts	0x005F, r0	; 0x80005f <__TEXT_REGION_LENGTH__+0x7e005f>
+ 17e:	0f 90       	pop	r0
+ 180:	1f 90       	pop	r1
+ 182:	18 95       	reti
+
+00000184 <A_3_2_2>:
 
 //##############################################################################
 
-// A_3_1_5: Blinken einer LED mit Warten auf Timer0 über eine Funktion im 1ms-Raster.
-void A_3_1_5(void)
+// A_3_2_2: Blinken einer LED mit ISR auf Timer-Compare.
+void A_3_2_2(void)
 {
- 11c:	cf 93       	push	r28
- 11e:	df 93       	push	r29
- 120:	cd b7       	in	r28, 0x3d	; 61
- 122:	de b7       	in	r29, 0x3e	; 62
+ 184:	cf 93       	push	r28
+ 186:	df 93       	push	r29
+ 188:	cd b7       	in	r28, 0x3d	; 61
+ 18a:	de b7       	in	r29, 0x3e	; 62
 	// IHR_CODE_HIER ...
-	LED_DDR = 0xff;
- 124:	84 e3       	ldi	r24, 0x34	; 52
- 126:	90 e0       	ldi	r25, 0x00	; 0
- 128:	2f ef       	ldi	r18, 0xFF	; 255
- 12a:	fc 01       	movw	r30, r24
- 12c:	20 83       	st	Z, r18
-	LED_PORT = 0xff;
- 12e:	85 e3       	ldi	r24, 0x35	; 53
- 130:	90 e0       	ldi	r25, 0x00	; 0
- 132:	2f ef       	ldi	r18, 0xFF	; 255
- 134:	fc 01       	movw	r30, r24
- 136:	20 83       	st	Z, r18
+	// Richtungsregister für die LEDs initialisieren
+	LED_DDR = 0b11111111;
+ 18c:	84 e3       	ldi	r24, 0x34	; 52
+ 18e:	90 e0       	ldi	r25, 0x00	; 0
+ 190:	2f ef       	ldi	r18, 0xFF	; 255
+ 192:	fc 01       	movw	r30, r24
+ 194:	20 83       	st	Z, r18
+
+	// Alle LEDs aus!
+	LED_PORT = 0b11111111;
+ 196:	85 e3       	ldi	r24, 0x35	; 53
+ 198:	90 e0       	ldi	r25, 0x00	; 0
+ 19a:	2f ef       	ldi	r18, 0xFF	; 255
+ 19c:	fc 01       	movw	r30, r24
+ 19e:	20 83       	st	Z, r18
+
+	// Überlaufzähler zurücksetzen
+	OvCnt = 0;
+ 1a0:	10 92 61 00 	sts	0x0061, r1	; 0x800061 <_edata+0x1>
+ 1a4:	10 92 60 00 	sts	0x0060, r1	; 0x800060 <_edata>
+
+	// Timer0 initialisieren
+	// Zählerstandsregister initialisieren
+	TCNT0 = 0;
+ 1a8:	82 e5       	ldi	r24, 0x52	; 82
+ 1aa:	90 e0       	ldi	r25, 0x00	; 0
+ 1ac:	fc 01       	movw	r30, r24
+ 1ae:	10 82       	st	Z, r1
+	// Vergleichsregister zurücksetzen
+	OCR0  = 250;
+ 1b0:	8c e5       	ldi	r24, 0x5C	; 92
+ 1b2:	90 e0       	ldi	r25, 0x00	; 0
+ 1b4:	2a ef       	ldi	r18, 0xFA	; 250
+ 1b6:	fc 01       	movw	r30, r24
+ 1b8:	20 83       	st	Z, r18
+	// Konfigurationsregister:
+	// WGM01:0 = Normaler Betrieb
+	// COM01:0 = Normaler Betrieb
+	// CS02:0  = Vorteiler 64
+	TCCR0 = (0<<WGM01) | (0<<WGM00) | (0<<COM01) | (0<<COM00) | (0<<CS02) | (1<<CS01) | (1<<CS00);
+ 1ba:	83 e5       	ldi	r24, 0x53	; 83
+ 1bc:	90 e0       	ldi	r25, 0x00	; 0
+ 1be:	23 e0       	ldi	r18, 0x03	; 3
+ 1c0:	fc 01       	movw	r30, r24
+ 1c2:	20 83       	st	Z, r18
+
+	// Interruptmaskenregister setzen:
+	// TOIE0: INT auslösen bei Überlauf Timer0 aktiv
+	// OCIE0: INT auslösen bei Vergleich Timer0 inaktiv
+	TIMSK |= (0<<TOIE0) | (1<<OCIE0);
+ 1c4:	89 e5       	ldi	r24, 0x59	; 89
+ 1c6:	90 e0       	ldi	r25, 0x00	; 0
+ 1c8:	29 e5       	ldi	r18, 0x59	; 89
+ 1ca:	30 e0       	ldi	r19, 0x00	; 0
+ 1cc:	f9 01       	movw	r30, r18
+ 1ce:	20 81       	ld	r18, Z
+ 1d0:	22 60       	ori	r18, 0x02	; 2
+ 1d2:	fc 01       	movw	r30, r24
+ 1d4:	20 83       	st	Z, r18
+
+	// Interrupts global freigeben
+	sei();
+ 1d6:	78 94       	sei
 	
 	while(1){
-		TGL_BIT(LED_PORT, 0);
- 138:	85 e3       	ldi	r24, 0x35	; 53
- 13a:	90 e0       	ldi	r25, 0x00	; 0
- 13c:	25 e3       	ldi	r18, 0x35	; 53
- 13e:	30 e0       	ldi	r19, 0x00	; 0
- 140:	f9 01       	movw	r30, r18
- 142:	30 81       	ld	r19, Z
- 144:	21 e0       	ldi	r18, 0x01	; 1
- 146:	23 27       	eor	r18, r19
- 148:	fc 01       	movw	r30, r24
- 14a:	20 83       	st	Z, r18
-		WaitTimer0_x_ms(200);
- 14c:	88 ec       	ldi	r24, 0xC8	; 200
- 14e:	90 e0       	ldi	r25, 0x00	; 0
- 150:	0e 94 3e 00 	call	0x7c	; 0x7c <WaitTimer0_x_ms>
+		
 	}
- 154:	f1 cf       	rjmp	.-30     	; 0x138 <A_3_1_5+0x1c>
+ 1d8:	ff cf       	rjmp	.-2      	; 0x1d8 <A_3_2_2+0x54>
 
-00000156 <__vector_11>:
-// ISR: Schlüsselwort für Compiler, dass dies eine ISR ist
-// TIMER0_OVF_vect: Information an den Compiler, mit welchem Interrupt
-//                  diese ISR verknüpft werden soll. Der Bezeichner "TIMER0_OVF_vect"
-//                  ist wie alle anderen ISR-Bezeichner in "avr/interrupt.h" definiert.
-ISR(TIMER0_OVF_vect)
-{
- 156:	1f 92       	push	r1
- 158:	0f 92       	push	r0
- 15a:	00 90 5f 00 	lds	r0, 0x005F	; 0x80005f <__TEXT_REGION_LENGTH__+0x7e005f>
- 15e:	0f 92       	push	r0
- 160:	11 24       	eor	r1, r1
- 162:	2f 93       	push	r18
- 164:	3f 93       	push	r19
- 166:	8f 93       	push	r24
- 168:	9f 93       	push	r25
- 16a:	ef 93       	push	r30
- 16c:	ff 93       	push	r31
- 16e:	cf 93       	push	r28
- 170:	df 93       	push	r29
- 172:	cd b7       	in	r28, 0x3d	; 61
- 174:	de b7       	in	r29, 0x3e	; 62
-  // Zählerstandsregister reinitialisieren
-  TCNT0 = 256-250;
- 176:	82 e5       	ldi	r24, 0x52	; 82
- 178:	90 e0       	ldi	r25, 0x00	; 0
- 17a:	26 e0       	ldi	r18, 0x06	; 6
- 17c:	fc 01       	movw	r30, r24
- 17e:	20 83       	st	Z, r18
-
-  // Überlaufzähler inkrementieren
-  OvCnt++;
- 180:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
- 184:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
- 188:	01 96       	adiw	r24, 0x01	; 1
- 18a:	90 93 61 00 	sts	0x0061, r25	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
- 18e:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <__DATA_REGION_ORIGIN__>
-  // Nach 100 Überläufen = 100ms
-  if (OvCnt == 2000)
- 192:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
- 196:	90 91 61 00 	lds	r25, 0x0061	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
- 19a:	80 3d       	cpi	r24, 0xD0	; 208
- 19c:	97 40       	sbci	r25, 0x07	; 7
- 19e:	71 f4       	brne	.+28     	; 0x1bc <__vector_11+0x66>
-  {
-	  // Überlaufzähler zurücksetzen
-	  OvCnt = 0;
- 1a0:	10 92 61 00 	sts	0x0061, r1	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
- 1a4:	10 92 60 00 	sts	0x0060, r1	; 0x800060 <__DATA_REGION_ORIGIN__>
-	  
-	  // LED toggeln
-    TGL_BIT(LED_PORT,LED_0);
- 1a8:	85 e3       	ldi	r24, 0x35	; 53
- 1aa:	90 e0       	ldi	r25, 0x00	; 0
- 1ac:	25 e3       	ldi	r18, 0x35	; 53
- 1ae:	30 e0       	ldi	r19, 0x00	; 0
- 1b0:	f9 01       	movw	r30, r18
- 1b2:	30 81       	ld	r19, Z
- 1b4:	21 e0       	ldi	r18, 0x01	; 1
- 1b6:	23 27       	eor	r18, r19
- 1b8:	fc 01       	movw	r30, r24
- 1ba:	20 83       	st	Z, r18
-  }	
-}	
- 1bc:	00 00       	nop
- 1be:	df 91       	pop	r29
- 1c0:	cf 91       	pop	r28
- 1c2:	ff 91       	pop	r31
- 1c4:	ef 91       	pop	r30
- 1c6:	9f 91       	pop	r25
- 1c8:	8f 91       	pop	r24
- 1ca:	3f 91       	pop	r19
- 1cc:	2f 91       	pop	r18
- 1ce:	0f 90       	pop	r0
- 1d0:	00 92 5f 00 	sts	0x005F, r0	; 0x80005f <__TEXT_REGION_LENGTH__+0x7e005f>
- 1d4:	0f 90       	pop	r0
- 1d6:	1f 90       	pop	r1
- 1d8:	18 95       	reti
-
-000001da <__vector_10>:
-// ISR: Schlüsselwort für Compiler, dass dies eine ISR ist
-// TIMER0_COMP_vect: Information an den Compiler, mit welchem Interrupt
-//                   diese ISR verknüpft werden soll. Der Bezeichner "TIMER0_COMP_vect"
-//                   ist wie alle anderen ISR-Bezeichner in "avr/interrupt.h" definiert.
-ISR(TIMER0_COMP_vect)
-{
- 1da:	1f 92       	push	r1
- 1dc:	0f 92       	push	r0
- 1de:	00 90 5f 00 	lds	r0, 0x005F	; 0x80005f <__TEXT_REGION_LENGTH__+0x7e005f>
- 1e2:	0f 92       	push	r0
- 1e4:	11 24       	eor	r1, r1
- 1e6:	cf 93       	push	r28
- 1e8:	df 93       	push	r29
- 1ea:	cd b7       	in	r28, 0x3d	; 61
- 1ec:	de b7       	in	r29, 0x3e	; 62
-  // IHR_CODE_HIER ...
-}	
- 1ee:	00 00       	nop
- 1f0:	df 91       	pop	r29
- 1f2:	cf 91       	pop	r28
- 1f4:	0f 90       	pop	r0
- 1f6:	00 92 5f 00 	sts	0x005F, r0	; 0x80005f <__TEXT_REGION_LENGTH__+0x7e005f>
- 1fa:	0f 90       	pop	r0
- 1fc:	1f 90       	pop	r1
- 1fe:	18 95       	reti
-
-00000200 <main>:
+000001da <main>:
 #include "Labor_3/MPT_LAB_3_3.h"
 #include "Labor_3/MPT_LAB_3_4.h"
 
 
 int main(void)
 {	
- 200:	cf 93       	push	r28
- 202:	df 93       	push	r29
- 204:	cd b7       	in	r28, 0x3d	; 61
- 206:	de b7       	in	r29, 0x3e	; 62
+ 1da:	cf 93       	push	r28
+ 1dc:	df 93       	push	r29
+ 1de:	cd b7       	in	r28, 0x3d	; 61
+ 1e0:	de b7       	in	r29, 0x3e	; 62
+  //                Interrupt-Betrieb des Timers über ISR in verschiedenen Betriebsarten.
+  // A_3_2_1: Blinken einer LED mit ISR auf Timer-Overflow.
+  // A_3_2_2: Blinken einer LED mit ISR auf Timer-Compare.
   //------------------------------------------------------------------------------
-  //A_3_1_1();
-  //A_3_1_2();
-  //A_3_1_3();
-  //A_3_1_4();
-  A_3_1_5();
- 208:	0e 94 8e 00 	call	0x11c	; 0x11c <A_3_1_5>
+  //A_3_2_1();
+  A_3_2_2();
+ 1e2:	0e 94 c2 00 	call	0x184	; 0x184 <A_3_2_2>
 
 
   while(1)
   {
       //TODO:: Please write your application code 
   }
- 20c:	ff cf       	rjmp	.-2      	; 0x20c <main+0xc>
+ 1e6:	ff cf       	rjmp	.-2      	; 0x1e6 <main+0xc>
 
-0000020e <_exit>:
- 20e:	f8 94       	cli
+000001e8 <_exit>:
+ 1e8:	f8 94       	cli
 
-00000210 <__stop_program>:
- 210:	ff cf       	rjmp	.-2      	; 0x210 <__stop_program>
+000001ea <__stop_program>:
+ 1ea:	ff cf       	rjmp	.-2      	; 0x1ea <__stop_program>

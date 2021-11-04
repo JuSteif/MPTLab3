@@ -50,7 +50,7 @@
 //                  darauf zugegriffen werden kann
 int16_t OvCnt;
 
-	
+
 //------------------------------------------------------------------------------
 //  Interrupt Service Routinen
 //------------------------------------------------------------------------------
@@ -61,21 +61,21 @@ int16_t OvCnt;
 //                  ist wie alle anderen ISR-Bezeichner in "avr/interrupt.h" definiert.
 ISR(TIMER0_OVF_vect)
 {
-  // Zählerstandsregister reinitialisieren
-  TCNT0 = 256-250;
+	// Zählerstandsregister reinitialisieren
+	TCNT0 = 256-250;
 
-  // Überlaufzähler inkrementieren
-  OvCnt++;
-  // Nach 100 Überläufen = 100ms
-  if (OvCnt == 2000)
-  {
-	  // Überlaufzähler zurücksetzen
-	  OvCnt = 0;
-	  
-	  // LED toggeln
-    TGL_BIT(LED_PORT,LED_0);
-  }	
-}	
+	// Überlaufzähler inkrementieren
+	OvCnt++;
+	// Nach 100 Überläufen = 100ms
+	if (OvCnt == 2000)
+	{
+		// Überlaufzähler zurücksetzen
+		OvCnt = 0;
+		
+		// LED toggeln
+		TGL_BIT(LED_PORT,LED_0);
+	}
+}
 
 
 // Interrupt-Service-Routine für den Interrupt bei Vergleich des Timer0
@@ -85,8 +85,20 @@ ISR(TIMER0_OVF_vect)
 //                   ist wie alle anderen ISR-Bezeichner in "avr/interrupt.h" definiert.
 ISR(TIMER0_COMP_vect)
 {
-  // IHR_CODE_HIER ...
-}	
+	// IHR_CODE_HIER ...
+
+	// Überlaufzähler inkrementieren
+	OvCnt++;
+	// Nach 100 Überläufen = 100ms
+	if (OvCnt == 2000)
+	{
+		// Überlaufzähler zurücksetzen
+		OvCnt = 0;
+		
+		// LED toggeln
+		TGL_BIT(LED_PORT,LED_0);
+	}
+}
 
 
 //------------------------------------------------------------------------------
@@ -98,45 +110,45 @@ ISR(TIMER0_COMP_vect)
 //  Public Funktionen
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-// Aufgabe A_3_2: LED-Blinken mit Zeitverzögerung über 8-Bit-Timer0 und 
+// Aufgabe A_3_2: LED-Blinken mit Zeitverzögerung über 8-Bit-Timer0 und
 //                Interrupt-Betrieb des Timers über ISR in verschiedenen Betriebsarten.
 // A_3_2_1: Blinken einer LED mit ISR auf Timer-Overflow.
 // A_3_2_2: Blinken einer LED mit ISR auf Timer-Compare.
 //------------------------------------------------------------------------------
 
 //##############################################################################
-	
+
 // A_3_2_1: Blinken einer LED mit ISR auf Timer-Overflow.
 void A_3_2_1(void)
 {
 	// Richtungsregister für die LEDs initialisieren
 	LED_DDR = 0b11111111;
 
-  // Alle LEDs aus!
-  LED_PORT = 0b11111111;
+	// Alle LEDs aus!
+	LED_PORT = 0b11111111;
 
-  // Überlaufzähler zurücksetzen
+	// Überlaufzähler zurücksetzen
 	OvCnt = 0;
 
-  // Timer0 initialisieren
-  // Zählerstandsregister initialisieren
-  TCNT0 = 256-250;
-  // Vergleichsregister zurücksetzen
-  OCR0  = 0;
-  // Konfigurationsregister:
-  // WGM01:0 = Normaler Betrieb
-  // COM01:0 = Normaler Betrieb
-  // CS02:0  = Vorteiler 64
-	TCCR0 = (0<<WGM01) | (0<<WGM00) | (0<<COM01) | (0<<COM00) | (0<<CS02) | (1<<CS01) | (1<<CS00);
+	// Timer0 initialisieren
+	// Zählerstandsregister initialisieren
+	TCNT0 = 256-250;
+	// Vergleichsregister zurücksetzen
+	OCR0  = 0;
+	// Konfigurationsregister:
+	// WGM01:0 = Normaler Betrieb
+	// COM01:0 = Normaler Betrieb
+	// CS02:0  = Vorteiler 64
+	TCCR0 = (0<<WGM01) | (0<<WGM00) | (0<<COM01) | (0<<COM00) | (0<<CS02) | (1<<CS01) | (1<<CS00); 
 
-  // Interruptmaskenregister setzen:
-  // TOIE0: INT auslösen bei Überlauf Timer0 aktiv
-  // OCIE0: INT auslösen bei Vergleich Timer0 inaktiv
-  TIMSK |= (1<<TOIE0) | (0<<OCIE0);
+	// Interruptmaskenregister setzen:
+	// TOIE0: INT auslösen bei Überlauf Timer0 aktiv
+	// OCIE0: INT auslösen bei Vergleich Timer0 inaktiv
+	TIMSK |= (1<<TOIE0) | (0<<OCIE0);
 
-  // Interrupts global freigeben
-  sei();
-  
+	// Interrupts global freigeben
+	sei();
+	
 	while (1)
 	{
 		// nichts mehr zu tun ... vorerst
@@ -148,7 +160,38 @@ void A_3_2_1(void)
 // A_3_2_2: Blinken einer LED mit ISR auf Timer-Compare.
 void A_3_2_2(void)
 {
-  // IHR_CODE_HIER ...
+	// IHR_CODE_HIER ...
+	// Richtungsregister für die LEDs initialisieren
+	LED_DDR = 0b11111111;
+
+	// Alle LEDs aus!
+	LED_PORT = 0b11111111;
+
+	// Überlaufzähler zurücksetzen
+	OvCnt = 0;
+
+	// Timer0 initialisieren
+	// Zählerstandsregister initialisieren
+	TCNT0 = 0;
+	// Vergleichsregister zurücksetzen
+	OCR0  = 250;
+	// Konfigurationsregister:
+	// WGM01:0 = Normaler Betrieb
+	// COM01:0 = Normaler Betrieb
+	// CS02:0  = Vorteiler 64
+	TCCR0 = (0<<WGM01) | (0<<WGM00) | (0<<COM01) | (0<<COM00) | (0<<CS02) | (1<<CS01) | (1<<CS00);
+
+	// Interruptmaskenregister setzen:
+	// TOIE0: INT auslösen bei Überlauf Timer0 aktiv
+	// OCIE0: INT auslösen bei Vergleich Timer0 inaktiv
+	TIMSK |= (0<<TOIE0) | (1<<OCIE0);
+
+	// Interrupts global freigeben
+	sei();
+	
+	while(1){
+		
+	}
 }
 
 //##############################################################################
@@ -157,5 +200,5 @@ void A_3_2_2(void)
 #endif /* ENABLE_A_3 */
 
 /*
- *  EoF
- */
+*  EoF
+*/
