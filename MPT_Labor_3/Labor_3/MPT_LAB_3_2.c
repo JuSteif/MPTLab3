@@ -86,9 +86,9 @@ ISR(TIMER0_OVF_vect)
 ISR(TIMER0_COMP_vect)
 {
 	// IHR_CODE_HIER ...
-
 	// Überlaufzähler inkrementieren
 	OvCnt++;
+	TCNT0 = 0;
 	// Nach 100 Überläufen = 100ms
 	if (OvCnt == 2000)
 	{
@@ -142,8 +142,8 @@ void A_3_2_1(void)
 	TCCR0 = (0<<WGM01) | (0<<WGM00) | (0<<COM01) | (0<<COM00) | (0<<CS02) | (1<<CS01) | (1<<CS00); 
 
 	// Interruptmaskenregister setzen:
-	// TOIE0: INT auslösen bei Überlauf Timer0 aktiv
-	// OCIE0: INT auslösen bei Vergleich Timer0 inaktiv
+	// TOIE0: INT auslösen bei Überlauf Timer0 inaktiv
+	// OCIE0: INT auslösen bei Vergleich Timer0 aktiv
 	TIMSK |= (1<<TOIE0) | (0<<OCIE0);
 
 	// Interrupts global freigeben
@@ -173,8 +173,8 @@ void A_3_2_2(void)
 	// Timer0 initialisieren
 	// Zählerstandsregister initialisieren
 	TCNT0 = 0;
-	// Vergleichsregister zurücksetzen
-	OCR0  = 250;
+	// Vergleichsregister setzen
+	OCR0  = 249;
 	// Konfigurationsregister:
 	// WGM01:0 = Normaler Betrieb
 	// COM01:0 = Normaler Betrieb
