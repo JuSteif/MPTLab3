@@ -47,7 +47,7 @@ int main(void)
   // A_3_2_2: Blinken einer LED mit ISR auf Timer-Compare.
   //------------------------------------------------------------------------------
   //A_3_2_1();
-  A_3_2_2();
+  //A_3_2_2();
 
 
   //------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ int main(void)
   // Hausaufgabe A_3_4: Entwickeln eines Reaktionstesters
   // A_3_4_1: Reaktionstester mit Zeitmessung über Timer0 und Terminalausgabe
   //------------------------------------------------------------------------------
-  //A_3_4_1();
+  A_3_4_1();
 
 
 

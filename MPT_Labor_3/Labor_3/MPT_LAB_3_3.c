@@ -45,8 +45,8 @@
 //------------------------------------------------------------------------------
 //  Private Variablen
 //------------------------------------------------------------------------------
-	
-	
+
+
 //------------------------------------------------------------------------------
 //  Interrupt Service Routinen
 //------------------------------------------------------------------------------
@@ -57,7 +57,29 @@
 //------------------------------------------------------------------------------
 static void WaitTimer0_x_ms(uint16_t x_ms)
 {
-  // IHR_CODE_HIER ... => Aufgabe A_3_1
+	// IHR_CODE_HIER ... => Aufgabe A_3_1
+	TCCR0 |= (1 << CS01) | (1 << CS00);
+	TCNT0 = 6;
+	OCR0 = 0;
+	TIMSK = 0;
+	
+	uint8_t waiter = 0;
+	
+	if(x_ms == 0){
+		return;
+	}
+	
+	while(1){
+		if(BIT_IS_SET(TIFR, TOV0)){
+			SET_BIT(TIFR, TOV0);
+			waiter++;
+			TCNT0 = 6;
+			
+			if(waiter >= x_ms){
+				return;
+			}
+		}
+	}
 }
 
 
@@ -77,22 +99,22 @@ static void WaitTimer0_x_ms(uint16_t x_ms)
 // A_3_3_1: Ansteuerung Schrittmotor in festen Intervallen.
 void A_3_3_1(void)
 {
-  uint8_t Stepper[] = {0b0011, 0b1001, 0b1100, 0b0110};
-  uint8_t StepPhase;
-  uint16_t StepTime;
-    
+	uint8_t Stepper[] = {0b0011, 0b1001, 0b1100, 0b0110};
+	uint8_t StepPhase;
+	uint16_t StepTime;
+	
 	// Richtungsregister für Port C auf Ausgang
 	LED_DDR = 0b11111111;
 
-  // Alle Bits an Port C auf '0' setzen
-  LED_PORT = 0b11111111;
+	// Alle Bits an Port C auf '0' setzen
+	LED_PORT = 0b11111111;
 
-  // Beginnen mit Stepper[0]
-  StepPhase = 0;
+	// Beginnen mit Stepper[0]
+	StepPhase = 0;
 
-  // Intervall zwischen 2 Steps
-  StepTime = 500;
-  
+	// Intervall zwischen 2 Steps
+	StepTime = 500;
+	
 	while (1)
 	{
 		// Aufruf der Warteroutine
@@ -112,7 +134,9 @@ void A_3_3_1(void)
 // A_3_3_2: Ansteuerung Schrittmotor als Sekundenzeiger einer Uhr.
 void A_3_3_2(void)
 {
-  // IHR_CODE_HIER ...
+	// IHR_CODE_HIER ...
+	
+	
 }
 
 //##############################################################################
@@ -121,7 +145,7 @@ void A_3_3_2(void)
 //          nach jedem Schritt.
 void A_3_3_3(void)
 {
-  // IHR_CODE_HIER ...
+	// IHR_CODE_HIER ...
 }
 
 //##############################################################################
@@ -130,5 +154,5 @@ void A_3_3_3(void)
 #endif /* ENABLE_A_3 */
 
 /*
- *  EoF
- */
+*  EoF
+*/

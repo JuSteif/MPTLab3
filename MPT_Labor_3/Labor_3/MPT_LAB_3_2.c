@@ -83,6 +83,7 @@ ISR(TIMER0_OVF_vect)
 // TIMER0_COMP_vect: Information an den Compiler, mit welchem Interrupt
 //                   diese ISR verknüpft werden soll. Der Bezeichner "TIMER0_COMP_vect"
 //                   ist wie alle anderen ISR-Bezeichner in "avr/interrupt.h" definiert.
+/*
 ISR(TIMER0_COMP_vect)
 {
 	// IHR_CODE_HIER ...
@@ -99,7 +100,7 @@ ISR(TIMER0_COMP_vect)
 		TGL_BIT(LED_PORT,LED_0);
 	}
 }
-
+*/
 
 //------------------------------------------------------------------------------
 //  Private Funktionen
