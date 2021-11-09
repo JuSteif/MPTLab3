@@ -220,7 +220,7 @@ void A_3_4_1(void)
 					// Pseudozufall, da nicht vorhersehbar und kann nur schwer von menchlichem Spieler beeinflusst werden.
 					// An zufälligem Zeitpunkt wird Timerregister ausgelesen
 					waitTime = TCNT0 % 10 + 1;
-					led = TCNT0 % 7;
+					led = TCNT0 % 8;
 					//Entprellen der Taste
 					WaitTimer0_x_10ms(5 * WAIT_EN);
 					
