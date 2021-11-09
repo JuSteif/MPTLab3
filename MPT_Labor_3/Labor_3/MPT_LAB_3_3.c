@@ -135,8 +135,34 @@ void A_3_3_1(void)
 void A_3_3_2(void)
 {
 	// IHR_CODE_HIER ...
+	uint8_t Stepper[] = {0b0011, 0b0001, 0b1001, 0b1000, 0b1100, 0b0100, 0b0110, 0b0010};
+	uint8_t StepPhase;
+	uint16_t StepTime;
 	
+	// Richtungsregister für Port C auf Ausgang
+	LED_DDR = 0b11111111;
+
+	// Alle Bits an Port C auf '0' setzen
+	LED_PORT = 0b11111111;
+
+	// Beginnen mit Stepper[0]
+	StepPhase = 0;
+
+	// Intervall zwischen 2 Steps
+	StepTime = 6000 / 8;
 	
+	while (1)
+	{
+		// Aufruf der Warteroutine
+		WaitTimer0_x_ms(StepTime);
+
+		// Ausgabe Stepper-Schritt
+		// Stepper ist an den Bits 4-7 angeschlossen
+		PORTC = (Stepper[StepPhase]<<4);
+
+		// Index für nächsten Stepper-Schritt berechnen
+		StepPhase = (StepPhase + 1) % 8;
+	}
 }
 
 //##############################################################################
@@ -146,6 +172,38 @@ void A_3_3_2(void)
 void A_3_3_3(void)
 {
 	// IHR_CODE_HIER ...
+	uint8_t Stepper[] = {0b0011, 0b0001, 0b1001, 0b1000, 0b1100, 0b0100, 0b0110, 0b0010};
+	uint8_t StepPhase;
+	uint16_t StepTime;
+	
+	// Richtungsregister für Port C auf Ausgang
+	LED_DDR = 0b11111111;
+
+	// Alle Bits an Port C auf '0' setzen
+	LED_PORT = 0b11111111;
+
+	// Beginnen mit Stepper[0]
+	StepPhase = 0;
+
+	// Intervall zwischen 2 Steps
+	StepTime = 6000 / 8;
+	
+	while (1)
+	{
+		// Aufruf der Warteroutine
+		WaitTimer0_x_ms(StepTime * 0.2f);
+
+		// Ausgabe Stepper-Schritt
+		// Stepper ist an den Bits 4-7 angeschlossen
+		PORTC = (Stepper[StepPhase]<<4);
+		
+		WaitTimer0_x_ms(StepTime * 0.8f);
+		
+		PORTC = 0x0;
+
+		// Index für nächsten Stepper-Schritt berechnen
+		StepPhase = (StepPhase + 1) % 8;
+	}
 }
 
 //##############################################################################
