@@ -47,7 +47,7 @@
 
 //Faktoren für besseres Testen 
 #define TIME_FAKTOR 100
-#define WAIT_EN 0
+#define WAIT_EN 1
 
 
 //------------------------------------------------------------------------------
@@ -143,15 +143,16 @@ char* uint16ToString(uint16_t number){
 	if(len < 4){
 		len = 4;
 	}
-	len++;
+	len += 2;
 	
 	//String anlegen, mit vorreserviertem Speicher
 	char* result;
 	result = malloc(sizeof(char) * len);
+	result[len - 1] = '\0';
 	
-	for(int8_t i = len - 1; i >= 0; i--){
+	for(int8_t i = len - 2; i >= 0; i--){
 		//If Abfrage, um Komma an richtige Position zu setzen
-		if(i == len - 4){
+		if(i == len - 5){
 			char zeichen = ',';
 			result[i] = zeichen;
 			continue;
@@ -202,11 +203,14 @@ void A_3_4_1(void)
 	// Speichervariable für zufällige LED
 	uint8_t led = 0;
 	// String für die konvertierte Reaktionszeit
-	char* reactionTime = "Fehler";
+	char* reactionTime;
+	
+	// Interupts aktivieren
+	sei();
 	
 	// Startaufforderung an Terminal senden
 	UsartPuts("Start drücken:\n");
-	
+ 	
 	while(1){
 		// switch für Statemaschine
 		switch(state){
@@ -214,6 +218,7 @@ void A_3_4_1(void)
 			case 0:
 				//Abfrage ob Spiel gestartet werden soll
 				if(BIT_IS_SET(TASTER_PIN, TASTER_START)){
+					UsartPuts("State 0");
 					// Neuen Status setzen(Start angefordert)
 					state = 1;
 					// Zufaellige Wartezeit- und LED-wahl
@@ -232,13 +237,15 @@ void A_3_4_1(void)
 				break;
 			// Case 1: Start angefordert nachdem Start gedrückt wurde
  			case 1:
+					UsartPuts("State 1");
 					// zufällige Zeit warten
 					WaitTimer0_x_10ms(waitTime * TIME_FAKTOR * WAIT_EN);
 					// Beschiss vermeiden, falls jemand schon den Stoptaster drückt bevor Lampe leuchtet
 					if(BIT_IS_SET(TASTER_PIN, 6) || BIT_IS_SET(TASTER_PIN, 2)){
 						UsartPuts("Nimm die Botten weg und Bescheis nicht!");
+						state = 3;
+						break;
 						while(BIT_IS_SET(TASTER_PIN, 6) || BIT_IS_SET(TASTER_PIN, 2)) {
-							
 						}
 					}
 					
@@ -251,10 +258,8 @@ void A_3_4_1(void)
 					TCNT0 = 0;
 					// Neuen State bestimmen(Auf Stop warten)
 					state = 2;
-					// Interupts aktivieren
-					sei();
 					// LED aktivieren
-					SET_BIT(LED_PORT, led);
+					CLR_BIT(LED_PORT, led);
 					
 					//(Zusaetzlich) Externen Interupt auf PB2 aktivieren(aufsteigende Flanke) 
 					GICR |= (1 << INT2);
@@ -262,6 +267,7 @@ void A_3_4_1(void)
 				break;
 			//Case 2: Auf Stop warten, bis der Nutzer die 6. Taste drückt oder die 2.
 			case 2:
+				// UsartPuts("State 2");
 				// Kontinuierliche Abfrage des 6. Tasters(Alternativ Taster 2 drücken, basiert auf Interuptverarbeitung, ansonsten gleiches Prinzip)
 				if(BIT_IS_SET(TASTER_PIN, 6)){
 					// state auf 3 setzen(Auswertung)
@@ -270,6 +276,7 @@ void A_3_4_1(void)
 				break;
 			// Case 3: Auswertung des Spiels, letzter Status
 			case 3:
+				UsartPuts("State 3");
 				// Interupt für Timer deaktivieren
 				TIMSK &= ~(1 << OCIE0);
 				// Reaktionszeit von uint16_t in String konvertieren
@@ -285,6 +292,11 @@ void A_3_4_1(void)
 				// Vorausetzungen für den Neustart schaffen
 				UsartPuts("Start drücken:\n");
 				LED_PORT = 0xff;
+				
+				TCCR0 = (0<<WGM01) | (0<<WGM00) | (0<<COM01) | (0<<COM00) | (0<<CS02) | (0<<CS01) | (1<<CS00);
+				TIMSK |= (0<<TOIE0) | (0<<OCIE0);
+				OCR0 = 0;
+				TCNT0 = 0;
 				
 				// Warten auf das Loslassen der Stoptaster
 				while(BIT_IS_SET(TASTER_PIN, 6) || BIT_IS_SET(TASTER_PIN, 2)){
